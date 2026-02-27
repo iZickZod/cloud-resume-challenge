@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isaac Sodimu — Information Systems</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --border: #1e2229;
+      --accent: #4fffb0;
+      --accent2: #00c8ff;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --card: #13161d;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(78,255,176,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(78,255,176,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(10,12,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s forwards 0.2s;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.6s forwards 0.4s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      opacity: 0;
+      animation: fadeUp 0.6s forwards 0.6s;
+    }
+
+    .hero-contacts {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s forwards 0.8s;
+    }
+
+    .hero-contacts a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .hero-contacts a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(78,255,176,0.04);
+    }
+
+    /* COUNTER */
+    .counter-bar {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .counter-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .counter-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--accent);
+      font-weight: 500;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .counter-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* SECTIONS */
+    .section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 4rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* EDUCATION */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .edu-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem;
+      transition: border-color 0.2s;
+    }
+
+    .edu-card:hover { border-color: rgba(78,255,176,0.3); }
+
+    .edu-school {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .edu-degree {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .edu-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+    }
+
+    /* PROJECTS */
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      transition: border-color 0.2s;
+    }
+
+    .project-card:hover { border-color: rgba(78,255,176,0.3); }
+
+    .project-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      opacity: 0.5;
+      margin-top: 4px;
+    }
+
+    .project-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* EXPERIENCE */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item:last-child { border-bottom: none; }
+
+    .exp-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 2;
+    }
+
+    .exp-meta .exp-date { color: var(--accent); }
+
+    .exp-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-company {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .exp-bullets li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .exp-bullets li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .skill-group {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+
+    .skill-group:hover { border-color: rgba(78,255,176,0.3); }
+
+    .skill-group-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 3rem;
+      border-top: 1px solid var(--border);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero, .section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .counter-bar { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">// isaac.sodimu</div>
+    <ul class="nav-links">
+      <li><a href="#education">Education</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">&#x25CF; Available for Opportunities · New Market, MD</div>
+    <h1>Ayooluwa<br /><em>Isaac</em> Sodimu</h1>
+    <p class="hero-sub">Information Systems student at UMBC. Building at the intersection of cloud infrastructure, IT, and thoughtful design.</p>
+    <div class="hero-contacts">
+      <a href="/cdn-cgi/l/email-protection#cfa6bcaeaeace1bca0aba6a2bafef6f9fe8fa8a2aea6a3e1aca0a2">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        <span class="__cf_email__" data-cfemail="2e475d4f4f4d005d414a47435b1f17181f6e49434f4742004d4143">[email&#160;protected]</span>
+      </a>
+      <a href="tel:2402413728">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/></svg>
+        240-241-3728
+      </a>
+      <a href="https://github.com/iZickZod" target="_blank">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.23 1.84 1.23 1.07 1.84 2.81 1.31 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/isaac-sodimu-83a1a8335/" target="_blank">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </section>
+
+  <!-- COUNTER BAR -->
+  <div class="counter-bar">
+    <div class="counter-dot"></div>
+    <span class="counter-label">Visitors</span>
+    <span class="counter-num" id="counter">—</span>
+    <span class="counter-label">· Powered by AWS Lambda + DynamoDB</span>
+  </div>
+
+  <!-- EDUCATION -->
+  <section class="section" id="education">
+    <div class="section-label">01 · Education</div>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-school">University of Maryland, Baltimore County</div>
+        <div class="edu-degree">Bachelor of Science in Information Systems</div>
+        <div class="edu-meta">Baltimore, MD · Expected May 2026</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-school">Frederick Community College</div>
+        <div class="edu-degree">Associate of Science in STEM</div>
+        <div class="edu-meta">Frederick, MD · May 2023</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="section-label">02 · Projects</div>
+    <div class="projects-list">
+      <div class="project-card">
+        <div class="project-num">01</div>
+        <div>
+          <div class="project-title">School Newsletter Web Application</div>
+          <p class="project-desc">Led a 4-person development team to create an interactive web platform using HTML, CSS, JavaScript, SQL, and PHP. Designed database architecture for efficient data storage and retrieval, implemented secure user authentication, and developed responsive design for cross-device compatibility.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">02</div>
+        <div>
+          <div class="project-title">Website Redesign Project</div>
+          <p class="project-desc">Collaborated with team members to modernize outdated websites using responsive design principles and contemporary UX/UI practices. Conducted user research to identify system inefficiencies and created wireframes in Figma for improved user experience.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-num">03</div>
+        <div>
+          <div class="project-title">Java Interactive Applications</div>
+          <p class="project-desc">Developed multiple Java-based applications including a team-based word-guessing game and text-based adventure game. Programmed core system logic, implemented difficulty-based scoring algorithms, and created randomized event systems for enhanced user engagement.</p>
+        </div>
+      </div>
+      <div class="project-card" style="border-color: rgba(78,255,176,0.25); background: rgba(78,255,176,0.03);">
+        <div class="project-num" style="opacity:1">04</div>
+        <div>
+          <div class="project-title">Cloud Resume Challenge <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--accent);margin-left:0.5rem;vertical-align:middle;">IN PROGRESS</span></div>
+          <p class="project-desc">Building a serverless cloud-hosted resume using AWS S3, CloudFront, Route 53, DynamoDB, Lambda, and API Gateway — with CI/CD via GitHub Actions. This page is the live result.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="section-label">03 · Experience</div>
+    <div class="exp-list">
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-date">Sept 2025 – Present</div>
+          <div>Frederick, MD</div>
+        </div>
+        <div>
+          <div class="exp-title">Stocker / Customer Service Associate</div>
+          <div class="exp-company">Walmart</div>
+          <ul class="exp-bullets">
+            <li>Delivered exceptional customer service assisting shoppers with product locations, inquiries, and recommendations.</li>
+            <li>Handled physical merchandise logistics including unloading shipments, organizing stockroom inventory, and maintaining safety standards.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-meta">
+          <div class="exp-date">Jan 2014 – May 2023</div>
+          <div>Bowie, MD</div>
+          <div style="margin-top:0.4rem;color:var(--accent)">Volunteer</div>
+        </div>
+        <div>
+          <div class="exp-title">Technical Support Representative</div>
+          <div class="exp-company">Winners Chapel Maryland</div>
+          <ul class="exp-bullets">
+            <li>Coordinated setup of video equipment for 200+ events with a 100% success rate in meeting technical requirements.</li>
+            <li>Adjusted camera angles and sound levels, enhancing audio clarity and visual consistency across events.</li>
+            <li>Trained 3 new volunteers in equipment setup and operation, reducing setup time and improving team efficiency.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="section-label">04 · Skills</div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages & Dev</div>
+        <div class="skill-tags">
+          <span class="tag">Java</span><span class="tag">HTML</span><span class="tag">CSS</span>
+          <span class="tag">JavaScript</span><span class="tag">PHP</span><span class="tag">SQL</span>
+          <span class="tag">PL/SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Cloud & Infrastructure</div>
+        <div class="skill-tags">
+          <span class="tag">AWS</span><span class="tag">S3</span><span class="tag">Lambda</span>
+          <span class="tag">DynamoDB</span><span class="tag">CloudFront</span><span class="tag">API Gateway</span>
+          <span class="tag">GitHub Actions</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools & Platforms</div>
+        <div class="skill-tags">
+          <span class="tag">VS Code</span><span class="tag">IntelliJ</span><span class="tag">GitHub</span>
+          <span class="tag">Figma</span><span class="tag">Linux</span><span class="tag">Windows</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Design & Media</div>
+        <div class="skill-tags">
+          <span class="tag">Figma</span><span class="tag">DaVinci Resolve</span><span class="tag">Blender</span>
+          <span class="tag">Final Cut Pro</span><span class="tag">SOLIDWORKS</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Hardware & Support</div>
+        <div class="skill-tags">
+          <span class="tag">PC Building</span><span class="tag">Troubleshooting</span>
+          <span class="tag">Camera Systems</span><span class="tag">Audio Equipment</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-tags">
+          <span class="tag">English (Fluent)</span><span class="tag">Spanish (Conversational)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Built with <span>AWS S3 · CloudFront · Lambda · DynamoDB</span> · Deployed via GitHub Actions · &copy; 2025 Isaac Sodimu
+  </footer>
+ <script>
+    const API_URL = 'https://q6s90sitvh.execute-api.us-east-2.amazonaws.com';
+
+    async function updateCounter() {
+      try {
+        const res = await fetch(API_URL, { method: 'POST' });
+        const data = await res.json();
+        document.getElementById('counter').textContent = data.count?.toLocaleString() ?? '—';
+      } catch (e) {
+        document.getElementById('counter').textContent = '...';
+      }
+    }
+
+    updateCounter();
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

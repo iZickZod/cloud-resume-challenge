@@ -1,0 +1,4 @@
+bucket-policy.json
+trust-policy.json
+*.zip
+*.csv
