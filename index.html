@@ -633,13 +633,21 @@
     Built with <span>AWS S3 · CloudFront · Lambda · DynamoDB</span> · Deployed via GitHub Actions · &copy; 2025 Isaac Sodimu
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // Visitor counter — will call your API Gateway endpoint
-    // Replace this URL with your real Lambda endpoint after AWS setup
-    const API_URL = 'YOUR_API_GATEWAY_URL_HERE';
+  <script>
+    const API_URL = 'https://q6s90sitvh.execute-api.us-east-2.amazonaws.com';
 
     async function updateCounter() {
       try {
         const res = await fetch(API_URL, { method: 'POST' });
         const data = await res.json();
-        document.getElementById('counter').textConte
+        document.getElementById('counter').textContent = data.count?.toLocaleString() ?? '—';
+      } catch (e) {
+        document.getElementById('counter').textContent = '...';
+      }
+    }
+
+    updateCounter();
+  </script>
+
+</body>
+</html>
