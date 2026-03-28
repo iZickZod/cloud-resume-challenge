@@ -407,33 +407,6 @@
       color: var(--text);
     }
 
-    /* REACTIONS */
-    .reactions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      padding-top: 0.8rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .reaction-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.75rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: 'DM Mono', monospace;
-    }
-
-    .reaction-btn:hover { border-color: rgba(78,255,176,0.3); color: var(--text); }
-    .reaction-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(78,255,176,0.08); }
-
     /* CONTACT */
     .contact-form {
       max-width: 560px;
@@ -863,84 +836,6 @@
       }
     }
 
-    // ── Reactions ─────────────────────────────────────────────────────────
-    const EMOJI = { fire: '🔥', clap: '👏', bulb: '💡' };
-
-    function getReactionState() {
-      try { return JSON.parse(localStorage.getItem('reactions') || '{}'); }
-      catch { return {}; }
-    }
-
-    function saveReactionState(state) {
-      localStorage.setItem('reactions', JSON.stringify(state));
-    }
-
-    function buildReactionButtons(pid) {
-      const div = document.createElement('div');
-      div.className = 'reactions';
-      div.id = `reactions-${pid}`;
-      const state = getReactionState()[pid] || {};
-      ['fire', 'clap', 'bulb'].forEach(r => {
-        const btn = document.createElement('button');
-        btn.className = 'reaction-btn' + (state[r] ? ' active' : '');
-        btn.id = `rbtn-${pid}-${r}`;
-        btn.innerHTML = `${EMOJI[r]} <span id="rc-${pid}-${r}">0</span>`;
-        btn.onclick = () => toggleReaction(pid, r);
-        div.appendChild(btn);
-      });
-      return div;
-    }
-
-    function initReactionButtons() {
-      document.querySelectorAll('.project-card').forEach(card => {
-        const pid = card.querySelector('.project-num')?.textContent.trim();
-        if (!pid) return;
-        card.appendChild(buildReactionButtons(pid));
-      });
-    }
-
-    async function loadReactions() {
-      try {
-        const res  = await fetch(`${INTERACTIONS_API}/reactions`);
-        const data = await res.json();
-        Object.entries(data).forEach(([pid, counts]) => {
-          ['fire', 'clap', 'bulb'].forEach(r => {
-            const el = document.getElementById(`rc-${pid}-${r}`);
-            if (el) el.textContent = counts[r] ?? 0;
-          });
-        });
-      } catch {}
-    }
-
-    async function toggleReaction(pid, reaction) {
-      const state  = getReactionState();
-      const active = !!(state[pid]?.[reaction]);
-      const action = active ? 'remove' : 'add';
-
-      // Optimistic UI update
-      const btn = document.getElementById(`rbtn-${pid}-${reaction}`);
-      const cnt = document.getElementById(`rc-${pid}-${reaction}`);
-      if (btn && cnt) {
-        btn.classList.toggle('active', !active);
-        cnt.textContent = Math.max(0, parseInt(cnt.textContent) + (active ? -1 : 1));
-      }
-
-      // Update localStorage
-      if (!state[pid]) state[pid] = {};
-      state[pid][reaction] = !active;
-      saveReactionState(state);
-
-      try {
-        const res  = await fetch(`${INTERACTIONS_API}/reactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ projectId: pid, reaction, action })
-        });
-        const data = await res.json();
-        if (cnt) cnt.textContent = data[reaction] ?? cnt.textContent;
-      } catch {}
-    }
-
     // ── Contact form ──────────────────────────────────────────────────────
     async function submitContact(e) {
       e.preventDefault();
@@ -1035,8 +930,6 @@
 
     // ── Init ──────────────────────────────────────────────────────────────
     updateCounter();
-    initReactionButtons();
-    loadReactions();
     loadPoll();
   </script>
 
