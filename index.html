@@ -497,7 +497,6 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#skills">Skills</a></li>
-
     </ul>
   </nav>
 
@@ -731,7 +730,7 @@
 
   <!-- POLL -->
   <section class="section" id="poll">
-    <div class="section-label">06 · Quick Poll</div>
+    <div class="section-label">05 · Quick Poll</div>
     <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.2rem;">What brought you here?</p>
     <div id="pollContainer">
       <div class="poll-options">
@@ -752,7 +751,6 @@
     const API_URL          = 'https://q6s90sitvh.execute-api.us-east-2.amazonaws.com';
     const INTERACTIONS_API = '__INTERACTIONS_API__';
 
-    // ── Visitor counter ────────────────────────────────────────────────────
     async function updateCounter() {
       try {
         const res  = await fetch(API_URL, { method: 'POST' });
@@ -763,7 +761,6 @@
       }
     }
 
-    // ── Poll ──────────────────────────────────────────────────────────────
     const POLL_LABELS = {
       recruiter: '👔 Recruiter / Hiring',
       student:   '🎓 Fellow Student',
@@ -811,9 +808,7 @@
       } catch {}
     }
 
-    // ── Init ──────────────────────────────────────────────────────────────
-    updateCounter();
-    loadPoll();
+    Promise.all([updateCounter(), loadPoll()]);
   </script>
 
 </body>
