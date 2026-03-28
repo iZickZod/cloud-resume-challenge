@@ -20,7 +20,7 @@ jobs:
           aws-region: us-east-2
 
       - name: Deploy to S3
-        run: aws s3 sync . s3://isaac-sodimu-resume --exclude "*" --include "index.html"
+        run: aws s3 sync . s3://isaac-sodimu-resume --exclude "*" --include "index.html" --include "favicon.svg"
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id E2UNC60ZGG94BR --paths "/*"
