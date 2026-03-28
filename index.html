@@ -407,65 +407,6 @@
       color: var(--text);
     }
 
-    /* CONTACT */
-    .contact-form {
-      max-width: 560px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .contact-form input,
-    .contact-form textarea {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.9rem;
-      padding: 0.7rem 1rem;
-      width: 100%;
-      transition: border-color 0.2s;
-      resize: none;
-    }
-
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      outline: none;
-      border-color: rgba(78,255,176,0.4);
-    }
-
-    .contact-form input::placeholder,
-    .contact-form textarea::placeholder { color: var(--muted); }
-
-    .contact-row { display: flex; gap: 0.8rem; }
-    .contact-row input { flex: 1; }
-
-    .contact-submit {
-      align-self: flex-start;
-      background: transparent;
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      color: var(--accent);
-      cursor: pointer;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      padding: 0.5rem 1.2rem;
-      transition: all 0.2s;
-    }
-
-    .contact-submit:hover { background: rgba(78,255,176,0.08); }
-    .contact-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .contact-msg {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      min-height: 1.2rem;
-    }
-
-    .contact-msg.ok  { color: var(--accent); }
-    .contact-msg.err { color: #ff6b6b; }
-
     /* POLL */
     .poll-options {
       display: flex;
@@ -556,7 +497,7 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#skills">Skills</a></li>
-      <li><a href="#contact">Contact</a></li>
+
     </ul>
   </nav>
 
@@ -788,21 +729,6 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="section-label">05 · Contact</div>
-    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.2rem;">Got an opportunity or just want to say hi? Drop a message and I'll get back to you.</p>
-    <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
-      <div class="contact-row">
-        <input type="text"  id="cf-name"    placeholder="Your name"  maxlength="100" required />
-        <input type="email" id="cf-email"   placeholder="Your email" maxlength="100" required />
-      </div>
-      <textarea id="cf-message" placeholder="Your message..." rows="5" maxlength="2000" required></textarea>
-      <button type="submit" class="contact-submit" id="cf-btn">Send Message</button>
-      <div class="contact-msg" id="cf-msg"></div>
-    </form>
-  </section>
-
   <!-- POLL -->
   <section class="section" id="poll">
     <div class="section-label">06 · Quick Poll</div>
@@ -833,53 +759,6 @@
         document.getElementById('counter').textContent = data.count?.toLocaleString() ?? '—';
       } catch (e) {
         document.getElementById('counter').textContent = '...';
-      }
-    }
-
-    // ── Contact form ──────────────────────────────────────────────────────
-    async function submitContact(e) {
-      e.preventDefault();
-      const btn = document.getElementById('cf-btn');
-      const msg = document.getElementById('cf-msg');
-
-      // Simple client-side rate limit: one submission per 60s
-      const last = parseInt(localStorage.getItem('lastContact') || '0');
-      if (Date.now() - last < 60000) {
-        msg.textContent = 'Please wait a moment before sending another message.';
-        msg.className = 'contact-msg err';
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Sending...';
-      msg.textContent = '';
-      msg.className = 'contact-msg';
-
-      try {
-        const res = await fetch(`${INTERACTIONS_API}/contact`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name:    document.getElementById('cf-name').value.trim(),
-            email:   document.getElementById('cf-email').value.trim(),
-            message: document.getElementById('cf-message').value.trim()
-          })
-        });
-        const data = await res.json();
-        if (data.success) {
-          msg.textContent = "Message sent! I'll get back to you soon.";
-          msg.className = 'contact-msg ok';
-          document.getElementById('contactForm').reset();
-          localStorage.setItem('lastContact', Date.now());
-        } else {
-          throw new Error(data.error || 'Unknown error');
-        }
-      } catch (err) {
-        msg.textContent = err.message || 'Something went wrong. Try again.';
-        msg.className = 'contact-msg err';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Send Message';
       }
     }
 
