@@ -407,6 +407,143 @@
       color: var(--text);
     }
 
+    /* REACTIONS */
+    .reactions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .reaction-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .reaction-btn:hover { border-color: rgba(78,255,176,0.3); color: var(--text); }
+    .reaction-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(78,255,176,0.08); }
+
+    /* CONTACT */
+    .contact-form {
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.7rem 1rem;
+      width: 100%;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: rgba(78,255,176,0.4);
+    }
+
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder { color: var(--muted); }
+
+    .contact-row { display: flex; gap: 0.8rem; }
+    .contact-row input { flex: 1; }
+
+    .contact-submit {
+      align-self: flex-start;
+      background: transparent;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--accent);
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.5rem 1.2rem;
+      transition: all 0.2s;
+    }
+
+    .contact-submit:hover { background: rgba(78,255,176,0.08); }
+    .contact-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .contact-msg {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      min-height: 1.2rem;
+    }
+
+    .contact-msg.ok  { color: var(--accent); }
+    .contact-msg.err { color: #ff6b6b; }
+
+    /* POLL */
+    .poll-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-width: 420px;
+    }
+
+    .poll-option {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.65rem 1rem;
+      text-align: left;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .poll-option:hover { border-color: rgba(78,255,176,0.3); color: var(--accent); }
+
+    .poll-results { display: flex; flex-direction: column; gap: 0.7rem; max-width: 420px; }
+
+    .poll-bar-row { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .poll-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .poll-bar-label span:last-child { color: var(--muted); font-family: 'DM Mono', monospace; }
+
+    .poll-bar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 3px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .poll-bar-fill {
+      background: var(--accent);
+      border-radius: 3px;
+      height: 100%;
+      transition: width 0.6s ease;
+    }
+
     /* FOOTER */
     footer {
       position: relative;
@@ -446,6 +583,7 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
@@ -677,16 +815,47 @@
     </div>
   </section>
 
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="section-label">05 · Contact</div>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.2rem;">Got an opportunity or just want to say hi? Drop a message and I'll get back to you.</p>
+    <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
+      <div class="contact-row">
+        <input type="text"  id="cf-name"    placeholder="Your name"  maxlength="100" required />
+        <input type="email" id="cf-email"   placeholder="Your email" maxlength="100" required />
+      </div>
+      <textarea id="cf-message" placeholder="Your message..." rows="5" maxlength="2000" required></textarea>
+      <button type="submit" class="contact-submit" id="cf-btn">Send Message</button>
+      <div class="contact-msg" id="cf-msg"></div>
+    </form>
+  </section>
+
+  <!-- POLL -->
+  <section class="section" id="poll">
+    <div class="section-label">06 · Quick Poll</div>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.2rem;">What brought you here?</p>
+    <div id="pollContainer">
+      <div class="poll-options">
+        <button class="poll-option" onclick="submitPoll('recruiter')">👔 Recruiter / Hiring</button>
+        <button class="poll-option" onclick="submitPoll('student')">🎓 Fellow Student</button>
+        <button class="poll-option" onclick="submitPoll('developer')">💻 Developer / Peer</button>
+        <button class="poll-option" onclick="submitPoll('browsing')">👀 Just Browsing</button>
+      </div>
+    </div>
+  </section>
+
   <footer>
     Built with <span>AWS S3 · CloudFront · Lambda · DynamoDB</span> · Deployed via GitHub Actions · &copy; 2025 Isaac Sodimu
   </footer>
 
   <script>
-    const API_URL = 'https://q6s90sitvh.execute-api.us-east-2.amazonaws.com';
+    const API_URL          = 'https://q6s90sitvh.execute-api.us-east-2.amazonaws.com';
+    const INTERACTIONS_API = '__INTERACTIONS_API__';
 
+    // ── Visitor counter ────────────────────────────────────────────────────
     async function updateCounter() {
       try {
-        const res = await fetch(API_URL, { method: 'POST' });
+        const res  = await fetch(API_URL, { method: 'POST' });
         const data = await res.json();
         document.getElementById('counter').textContent = data.count?.toLocaleString() ?? '—';
       } catch (e) {
@@ -694,7 +863,181 @@
       }
     }
 
+    // ── Reactions ─────────────────────────────────────────────────────────
+    const EMOJI = { fire: '🔥', clap: '👏', bulb: '💡' };
+
+    function getReactionState() {
+      try { return JSON.parse(localStorage.getItem('reactions') || '{}'); }
+      catch { return {}; }
+    }
+
+    function saveReactionState(state) {
+      localStorage.setItem('reactions', JSON.stringify(state));
+    }
+
+    function buildReactionButtons(pid) {
+      const div = document.createElement('div');
+      div.className = 'reactions';
+      div.id = `reactions-${pid}`;
+      const state = getReactionState()[pid] || {};
+      ['fire', 'clap', 'bulb'].forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'reaction-btn' + (state[r] ? ' active' : '');
+        btn.id = `rbtn-${pid}-${r}`;
+        btn.innerHTML = `${EMOJI[r]} <span id="rc-${pid}-${r}">0</span>`;
+        btn.onclick = () => toggleReaction(pid, r);
+        div.appendChild(btn);
+      });
+      return div;
+    }
+
+    function initReactionButtons() {
+      document.querySelectorAll('.project-card').forEach(card => {
+        const pid = card.querySelector('.project-num')?.textContent.trim();
+        if (!pid) return;
+        card.appendChild(buildReactionButtons(pid));
+      });
+    }
+
+    async function loadReactions() {
+      try {
+        const res  = await fetch(`${INTERACTIONS_API}/reactions`);
+        const data = await res.json();
+        Object.entries(data).forEach(([pid, counts]) => {
+          ['fire', 'clap', 'bulb'].forEach(r => {
+            const el = document.getElementById(`rc-${pid}-${r}`);
+            if (el) el.textContent = counts[r] ?? 0;
+          });
+        });
+      } catch {}
+    }
+
+    async function toggleReaction(pid, reaction) {
+      const state  = getReactionState();
+      const active = !!(state[pid]?.[reaction]);
+      const action = active ? 'remove' : 'add';
+
+      // Optimistic UI update
+      const btn = document.getElementById(`rbtn-${pid}-${reaction}`);
+      const cnt = document.getElementById(`rc-${pid}-${reaction}`);
+      if (btn && cnt) {
+        btn.classList.toggle('active', !active);
+        cnt.textContent = Math.max(0, parseInt(cnt.textContent) + (active ? -1 : 1));
+      }
+
+      // Update localStorage
+      if (!state[pid]) state[pid] = {};
+      state[pid][reaction] = !active;
+      saveReactionState(state);
+
+      try {
+        const res  = await fetch(`${INTERACTIONS_API}/reactions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ projectId: pid, reaction, action })
+        });
+        const data = await res.json();
+        if (cnt) cnt.textContent = data[reaction] ?? cnt.textContent;
+      } catch {}
+    }
+
+    // ── Contact form ──────────────────────────────────────────────────────
+    async function submitContact(e) {
+      e.preventDefault();
+      const btn = document.getElementById('cf-btn');
+      const msg = document.getElementById('cf-msg');
+
+      // Simple client-side rate limit: one submission per 60s
+      const last = parseInt(localStorage.getItem('lastContact') || '0');
+      if (Date.now() - last < 60000) {
+        msg.textContent = 'Please wait a moment before sending another message.';
+        msg.className = 'contact-msg err';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      msg.textContent = '';
+      msg.className = 'contact-msg';
+
+      try {
+        const res = await fetch(`${INTERACTIONS_API}/contact`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name:    document.getElementById('cf-name').value.trim(),
+            email:   document.getElementById('cf-email').value.trim(),
+            message: document.getElementById('cf-message').value.trim()
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          msg.textContent = "Message sent! I'll get back to you soon.";
+          msg.className = 'contact-msg ok';
+          document.getElementById('contactForm').reset();
+          localStorage.setItem('lastContact', Date.now());
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      } catch (err) {
+        msg.textContent = err.message || 'Something went wrong. Try again.';
+        msg.className = 'contact-msg err';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
+    }
+
+    // ── Poll ──────────────────────────────────────────────────────────────
+    const POLL_LABELS = {
+      recruiter: '👔 Recruiter / Hiring',
+      student:   '🎓 Fellow Student',
+      developer: '💻 Developer / Peer',
+      browsing:  '👀 Just Browsing'
+    };
+
+    function renderPollResults(counts) {
+      const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+      const container = document.getElementById('pollContainer');
+      container.innerHTML = '<div class="poll-results">' +
+        Object.entries(POLL_LABELS).map(([key, label]) => {
+          const n   = counts[key] || 0;
+          const pct = Math.round((n / total) * 100);
+          return `<div class="poll-bar-row">
+            <div class="poll-bar-label"><span>${label}</span><span>${pct}%</span></div>
+            <div class="poll-bar-track"><div class="poll-bar-fill" style="width:${pct}%"></div></div>
+          </div>`;
+        }).join('') +
+      '</div>';
+    }
+
+    async function loadPoll() {
+      if (localStorage.getItem('pollVoted')) {
+        try {
+          const res = await fetch(`${INTERACTIONS_API}/poll`);
+          renderPollResults(await res.json());
+        } catch {}
+      }
+    }
+
+    async function submitPoll(option) {
+      if (localStorage.getItem('pollVoted')) return;
+      localStorage.setItem('pollVoted', option);
+      try {
+        const res = await fetch(`${INTERACTIONS_API}/poll`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ option })
+        });
+        renderPollResults(await res.json());
+      } catch {}
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────
     updateCounter();
+    initReactionButtons();
+    loadReactions();
+    loadPoll();
   </script>
 
 </body>
