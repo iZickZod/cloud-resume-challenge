@@ -95,7 +95,7 @@ def handle_contact(method, body):
 
 def handle_poll(method, body):
     table = dynamodb.Table('portfolio-poll')
-    valid = ['recruiter', 'student', 'developer', 'browsing']
+    valid = ['recruiter', 'student', 'developer', 'browsing', 'other']
 
     if method == 'GET':
         result = table.scan()

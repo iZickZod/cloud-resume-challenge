@@ -739,6 +739,7 @@
         <button class="poll-option" onclick="submitPoll('student')">🎓 Fellow Student</button>
         <button class="poll-option" onclick="submitPoll('developer')">💻 Developer / Peer</button>
         <button class="poll-option" onclick="submitPoll('browsing')">👀 Just Browsing</button>
+        <button class="poll-option" onclick="submitPoll('other')">🤷 Other</button>
       </div>
     </div>
   </section>
@@ -767,7 +768,8 @@
       recruiter: '👔 Recruiter / Hiring',
       student:   '🎓 Fellow Student',
       developer: '💻 Developer / Peer',
-      browsing:  '👀 Just Browsing'
+      browsing:  '👀 Just Browsing',
+      other:     '🤷 Other'
     };
 
     function renderPollResults(counts) {
@@ -785,8 +787,10 @@
       '</div>';
     }
 
+    const POLL_PREVIEW = new URLSearchParams(window.location.search).get('preview') === '1';
+
     async function loadPoll() {
-      if (localStorage.getItem('pollVoted')) {
+      if (localStorage.getItem('pollVoted') || POLL_PREVIEW) {
         try {
           const res = await fetch(`${INTERACTIONS_API}/poll`);
           renderPollResults(await res.json());
@@ -795,7 +799,7 @@
     }
 
     async function submitPoll(option) {
-      if (localStorage.getItem('pollVoted')) return;
+      if (localStorage.getItem('pollVoted') || POLL_PREVIEW) return;
       localStorage.setItem('pollVoted', option);
       try {
         const res = await fetch(`${INTERACTIONS_API}/poll`, {
