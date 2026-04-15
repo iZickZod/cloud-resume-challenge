@@ -800,10 +800,8 @@
       '</div>';
     }
 
-    const POLL_PREVIEW = new URLSearchParams(window.location.search).get('preview') === '1';
-
     async function loadPoll() {
-      if (localStorage.getItem('pollVoted') || POLL_PREVIEW) {
+      if (localStorage.getItem('pollVoted')) {
         try {
           const res = await fetch(`${INTERACTIONS_API}/poll`);
           renderPollResults(await res.json());
@@ -812,7 +810,7 @@
     }
 
     async function submitPoll(option) {
-      if (localStorage.getItem('pollVoted') || POLL_PREVIEW) return;
+      if (localStorage.getItem('pollVoted')) return;
       localStorage.setItem('pollVoted', option);
       try {
         const res = await fetch(`${INTERACTIONS_API}/poll`, {
