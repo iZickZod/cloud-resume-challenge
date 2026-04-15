@@ -530,7 +530,8 @@
     <div class="counter-dot"></div>
     <span class="counter-label">Visitors</span>
     <span class="counter-num" id="counter">—</span>
-    <span class="counter-label">· Powered by AWS Lambda + DynamoDB</span>
+    <span class="counter-label" style="margin-left:1.2rem;">· Live for</span>
+    <span class="counter-num" id="uptime" style="margin-left:0.5rem;">—</span>
   </div>
 
   <!-- ABOUT -->
@@ -767,6 +768,22 @@
     const API_URL          = 'https://q6s90sitvh.execute-api.us-east-2.amazonaws.com';
     const INTERACTIONS_API = '__INTERACTIONS_API__';
 
+    function startUptime() {
+      // March 5, 2026 12:34 AM EST (UTC-5 = 05:34 UTC)
+      const launch = new Date('2026-03-05T05:34:00Z');
+      function tick() {
+        const diff = Math.floor((Date.now() - launch) / 1000);
+        const d = Math.floor(diff / 86400);
+        const h = Math.floor((diff % 86400) / 3600);
+        const m = Math.floor((diff % 3600) / 60);
+        const s = diff % 60;
+        document.getElementById('uptime').textContent =
+          `${d}d ${h}h ${m}m ${s}s`;
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
     async function updateCounter() {
       try {
         const res  = await fetch(API_URL, { method: 'POST' });
@@ -822,6 +839,7 @@
       } catch {}
     }
 
+    startUptime();
     Promise.all([updateCounter(), loadPoll()]);
   </script>
 
